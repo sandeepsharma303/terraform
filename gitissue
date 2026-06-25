@@ -1,0 +1,22 @@
+If this is a brand-new repository
+
+If you don't care about preserving the local commit history, the quickest fix is to start with a clean Git history after confirming .terraform is gone:
+
+rm -rf .git
+
+find . -type d -name ".terraform" -exec rm -rf {} +
+
+cat > .gitignore <<EOF
+.terraform/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+EOF
+
+git init
+git checkout -b fix/module-workspace
+git add .
+git commit -m "Initial Terraform project"
+git remote add origin git@github.com:sandeepsharma303/terraform.git
+git push -u origin fix/module-workspace

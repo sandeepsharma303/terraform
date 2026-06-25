@@ -8,5 +8,4 @@
 | Network    | `cidrhost`, `cidrsubnet`, `cidrsubnets`, `cidrnetmask`           |
 | Files      | `file`, `templatefile`, `fileset`, `fileexists`                  |
 | Date       | `timestamp`, `timeadd`, `formatdate`                             |
-| Utility    | `coalesce`, `try`, `can`, `one`, `range`, `alltrue`, `anytrue`   |
-| Crypto     | `md5`, `sha256`, `bcrypt`, `base64encode`                        |
+

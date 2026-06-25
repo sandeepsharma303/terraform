@@ -27,3 +27,10 @@ terraform console
 |                     | `formatdate()` | `formatdate("DD-MM-YYYY", timestamp())` | `"26-06-2026"` *(example)*                                 |
 | **Encoding**        | `jsonencode()` | `jsonencode({name="Sandeep",age=24})`   | `{"name":"Sandeep","age":24}`                              |
 |                     | `jsondecode()` | `jsondecode("{\"name\":\"Sandeep\"}")`  | `{name="Sandeep"}`                                         |
+| Function        | Purpose                                      | Example                          | Output                          |
+| --------------- | -------------------------------------------- | -------------------------------- | ------------------------------- |
+| `cidrhost()`    | Returns a specific host IP from a CIDR block | `cidrhost("10.0.0.0/24",10)`     | `10.0.0.10`                     |
+| `cidrsubnet()`  | Creates one subnet from a network            | `cidrsubnet("10.0.0.0/16",8,1)`  | `10.0.1.0/24`                   |
+| `cidrsubnets()` | Creates multiple subnets at once             | `cidrsubnets("10.0.0.0/16",8,8)` | `["10.0.0.0/24","10.0.1.0/24"]` |
+| `cidrnetmask()` | Returns the subnet mask                      | `cidrnetmask("10.0.0.0/24")`     | `255.255.255.0`                 |
+

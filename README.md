@@ -1,6 +1,21 @@
-POINT 1:
 
+======================================================
+list → Ordered values, duplicates allowed.
+=============================================
+set → Unique values, no duplicates.
+==============================================
+map → Key → Value pairs.
+==================================================
+tuple → Fixed position + fixed data type.
+=================================================
+object → Named attributes with multiple data types.
+========================================================
+
+
+POINT 1:
+==============
 list(string) -> count = 2 loop ->iteration
+==============================================
 
 variable "cidr_block " { 
 type = list(string)
@@ -41,8 +56,12 @@ var.cidr_blocks[2]  # Third item
 ==========================================================================================================================
 
 Pint 2 :
+=====================
 
 set(string)  -> avoid the duplicate in set 
+===================================================
+
+
 variable "cidr_block " { 
 type = set(string)
 default = ["us-east-1", eu-west-1", "us-east-1" ]
@@ -68,7 +87,7 @@ variable "allowed_regions" {
 ===================================================================================================================
 
 point 3 :  map(string) => key = value single data type only 
-
+================================================================
 variable "tags" {
 type = map(string)
 deafult = {
@@ -83,7 +102,7 @@ deafult = {
 ====================================================================================================================
 
  point 4 "     tuple never changes  the position 
- 
+ ==================================================================
 
 variable "ingress_values" {
   type = tuple([ number, string, number])
@@ -101,6 +120,7 @@ to _port =  var.ingress_values[2]
 ====================================================================================================================
 
 pont 5 :  object  collection of multiple data type 
+================================================================================
 
 variable "config" {
    type = object ({
@@ -121,7 +141,7 @@ acces the values   --> region =   var.config.region
 					   instance_count =  var.config.instance_count
 
 ======================================================================================
-
+=
 					   
 
 

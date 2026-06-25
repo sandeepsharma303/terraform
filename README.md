@@ -1,158 +1,143 @@
-Terraform Refresh and Drift Detection Workflow
-Infrastructure Refresh
+POINT 1:
 
-To check what changes have been made directly in the infrastructure, use the Terraform refresh commands.
+list(string) -> count = 2 loop ->iteration
 
-terraform plan -refresh-only
+variable "cidr_block " { 
+type = list(string)
+default = ["10.0.0.1/8", "10.0.11.9/210" ,"10.0.0.1/8"]
+}
 
-Checks the current infrastructure and compares it with the Terraform state.
+so call in resource -->  var.cidr_block or if want to run single array var.cidr_block[0]
 
-Reads the real infrastructure.
-Refreshes the Terraform state in memory.
-Does not update the Terraform state file.
-Does not modify the infrastructure.
-terraform plan -refresh-only
-terraform apply -refresh-only
+want to access particaulat item -> [0], [1]
 
-Updates the Terraform state to match the real infrastructure without making any changes to the infrastructure itself.
 
-terraform apply -refresh-only
-Example
+or
 
-If someone manually changes an AWS resource, running:
 
-terraform apply -refresh-only
+A list(string) stores an ordered collection of string values. Unlike a set, a list allows duplicate values and preserves the order of elements.
 
-updates the Terraform state to reflect those manual changes. The infrastructure remains unchanged.
+variable "cidr_blocks" {
+  type = list(string)
 
-Initialize Terraform
+  default = [
+    "10.0.0.0/8",
+    "10.0.11.0/24",
+    "10.0.0.0/8"
+  ]
+}
+Using the List in a Resource
 
-Initialize Terraform with the backend configuration.
+To use the entire list:
 
-terraform init -backend-config="backend/dev.hcl"
-Note
-Run this command when setting up the project for the first time on your local machine.
-If the backend is already configured, Terraform automatically uses the existing remote state.
-Select Workspace
+var.cidr_blocks
 
-Select the required workspace. If it doesn't exist, create it.
+To access a specific element by its index:
 
-terraform workspace select ${ENV} || terraform workspace new ${ENV}
-Validate Configuration
+var.cidr_blocks[0]  # First item
+var.cidr_blocks[1]  # Second item
+var.cidr_blocks[2]  # Third item
 
-Validate the Terraform configuration before planning.
+==========================================================================================================================
 
-terraform validate
-Drift Detection
+Pint 2 :
 
-Check whether the infrastructure has drifted from the Terraform state.
+set(string)  -> avoid the duplicate in set 
+variable "cidr_block " { 
+type = set(string)
+default = ["us-east-1", eu-west-1", "us-east-1" ]
+}
 
-terraform plan -refresh-only -detailed-exitcode
-Exit Codes
-Exit Code	Description
-0	No drift detected
-1	Terraform execution failed
-2	Infrastructure drift detected
-Example Script Logic
-terraform plan -refresh-only -detailed-exitcode
+but if you want to access this as list to convert into tolist(var.allowed_region)[0]
 
-case $? in
-    0)
-        echo "No drift detected"
-        ;;
-    1)
-        echo "Terraform execution failed"
-        exit 1
-        ;;
-    2)
-        echo "Infrastructure drift detected"
-        ;;
-esac
-Apply Infrastructure Changes
+or 
 
-If someone manually changes AWS resources and those changes are not reflected in your Terraform configuration, Terraform considers them infrastructure drift.
+A set(string) stores unique string values. If duplicate values are provided, Terraform automatically removes them.
 
-Running the following commands:
+variable "allowed_regions" {
+  type = set(string)
 
-terraform plan -out=tfplan
+  default = [
+    "us-east-1",
+    "eu-west-1",
+    "us-east-1" # Duplicate value
+  ]
+}
 
-terraform apply tfplan
 
-will:
+===================================================================================================================
 
-Compare the Terraform configuration with the actual infrastructure.
-Generate an execution plan.
-Revert any manual changes made outside Terraform.
-Restore the infrastructure to the desired state defined in the Terraform configuration.
-Example
+point 3 :  map(string) => key = value single data type only 
 
-Terraform configuration:
+variable "tags" {
+type = map(string)
+deafult = {
+  env = "dev"
+   name = "dev"
+   }
+}
+ call with var.tags --> worksfine 
 
-instance_type = "t3.micro"
 
-Someone manually changes the EC2 instance in AWS to:
 
-t3.medium
+====================================================================================================================
 
-Running:
+ point 4 "     tuple never changes  the position 
+ 
 
-terraform plan -out=tfplan
+variable "ingress_values" {
+  type = tuple([ number, string, number])
+  default = [ 443, "tcp",  443 ]
+}
 
-terraform apply tfplan
+for example call in secuirty group like 
+|
+from_port = var.ingress_values[0] -443
+ip_protocol = var.ingress_values[1]
+to _port =  var.ingress_values[2]
 
-will change the EC2 instance back to t3.micro, because Terraform always treats the Terraform configuration (.tf files) as the desired state.
 
 
+====================================================================================================================
 
+pont 5 :  object  collection of multiple data type 
 
+variable "config" {
+   type = object ({
+   region = string,
+   monitoring = bool
+   instance_count = number
+   })
 
+  default = {
+   region = "us-east-1",
+   monitoring = true,
+   instance_count = 2
+   }
+ }
 
+acces the values   --> region =   var.config.region
+                       monitoring =  var.config.monitoring
+					   instance_count =  var.config.instance_count
 
-======================================================
+======================================================================================
 
+					   
 
 
 
-so what every changes has been in infra level refresh done the change 
 
 
-terraform plan -refresh-only means:  check the dersied  the Terraform state to match the real infrastructure
 
-terraform apply -refresh-only means:
+ 
 
-Update the Terraform state to match the real infrastructure, without making any changes to the infrastructure itself.
 
 
 
-now 
 
 
-terraform init -backend-config="backend/dev.hcl"   -> use if there si no remote file setup on local 
-if state in remote automatically pick
 
 
 
-terraform workspace select ${ENV} || terraform workspace new ${ENV}
 
-terraform validate
-
-terraform plan -refresh-only -detailed-exitcode   -- check the drift is yes or not )in command So, yes, if someone manually changed AWS and you did not update your Terraform code, then:
-
-in scruipts  can create the logic 
-
-            ok = 0
-            error = 1
-	    drift detction = 2
-
-
-
-
-So, yes, if someone manually changed AWS and you did not update your Terraform code, then:
-will revert those manual changes and restore the infrastructure to the state defined in your Terraform configuration.
-
-
-terraform plan -out=tfplan
-
-
-terraform apply tfplan
 

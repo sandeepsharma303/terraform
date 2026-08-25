@@ -26,3 +26,11 @@ root@ip-172-31-24-242:~/terraform# terraform apply
 │ by multiple users at the same time. Please resolve the issue above and try
 │ again. For most commands, you can disable locking with the "-lock=false"
 │ flag, but this is not recommended.
+
+
+
+aws s3 nucket has file name :
+
+terraform.tfstate.tflock
+
+

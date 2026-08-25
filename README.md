@@ -33,4 +33,8 @@ aws s3 nucket has file name :
 
 terraform.tfstate.tflock
 
+so need to unlcok the lock so update in team not performing action as lock has been created
+
+
+terrfaorm forec-unlock   0c75e16a-f3f8-4161-65d0-7a53ef217a8b
 
